@@ -1,0 +1,124 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starfield AI Assistant</title>
+    
+    <link rel="stylesheet" href="{%static 'css/code_scanner.css' %}">
+
+    
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <section id="aiJourney">
+        <div class="journey-intro">
+            <h1>Code Vulnerability Detector</h1>
+            <p>Chat with our fined tuned model, to check the possibilities of vulnerabilites in your code and secure your system from possible threats?</p>
+            <button id="startJourney">Initiate Chat</button>
+        </div>
+        <div class="conversation hidden">
+            <div class="chat-area">
+                <div class="chat-bubble ai-bubble">Greetings, Developer. I am your AI guide to detect for vulnerabilites in your code. Just paste in your code our model will scan the code for possible vulnerabilites and that can poses security threats to your system and will generate you a secure version of your code </div>
+            </div>
+            <div class="user-input">
+                <textarea class="textareas" cols="500" row="6" type="text" id="userResponse" placeholder="Enter your Code here..."></textarea>
+                <button id="sendResponse">Scan</button>
+            </div>
+        </div>
+    </section>
+    <script>
+        // JavaScript code will be added here
+        document.getElementById('startJourney').addEventListener('click', function() {
+            document.querySelector('.journey-intro').classList.add('hidden');
+            document.querySelector('.conversation').classList.remove('hidden');
+            initStarfield();
+        });
+
+        document.getElementById('sendResponse').addEventListener('click', sendMessage);
+        /*document.getElementById('userResponse').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        */
+
+        function sendMessage() {
+            const userInput = document.getElementById('userResponse').value;
+            if (userInput.trim() !== '') {
+                const chatArea = document.querySelector('.chat-area');
+                const userBubble = document.createElement('div');
+                userBubble.classList.add('chat-bubble', 'user-bubble');
+                userBubble.textContent = userInput;
+                chatArea.appendChild(userBubble);
+
+                setTimeout(() => {
+                    const aiResponse = document.createElement('div');
+                    aiResponse.classList.add('chat-bubble', 'ai-bubble');
+                    aiResponse.textContent = generateResponse(userInput);
+                    chatArea.appendChild(aiResponse);
+                    chatArea.scrollTop = chatArea.scrollHeight;
+                }, 1000);
+            }
+            document.getElementById('userResponse').value = '';
+        }
+
+        function generateResponse(input) {
+            const responses = [
+                "Fascinating query. Our databanks suggest that " + input + " is closely related to the cosmic phenomena we've observed in the Starfield.",
+                "Ah, " + input + "! A topic of great interest. Recent discoveries in the outer rim have shed new light on this subject.",
+                "Your interest in " + input + " is well-placed. It's a crucial element in our understanding of interstellar travel.",
+                "The mysteries of " + input + " continue to perplex even our most advanced AI systems. Shall we delve deeper?",
+                "Our latest mission to the " + input + " sector has yielded unexpected results. Would you like to know more?"
+            ];
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        function initStarfield() {
+            const canvas = document.getElementById('starfield');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initStars();
+            }
+
+            function initStars() {
+                stars = [];
+                const numStars = Math.floor((canvas.width * canvas.height) / 1000);
+                for (let i = 0; i < numStars; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.5,
+                        speed: Math.random() * 0.5
+                    });
+                }
+            }
+
+            function drawStars() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#FFF';
+                stars.forEach(star => {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    star.y += star.speed;
+                    if (star.y > canvas.height) {
+                        star.y = 0;
+                    }
+                });
+                requestAnimationFrame(drawStars);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            drawStars();
+        }
+    </script>
+</body>
+</html>

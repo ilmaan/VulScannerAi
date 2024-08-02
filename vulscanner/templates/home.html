@@ -1,0 +1,241 @@
+{%load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+      <!--Custom CSS-->
+      <link rel="stylesheet" href="{% static 'css/home.css' %}">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+
+
+    <title>Document</title>
+</head>
+<body>
+    <header class="showcase">
+        <div class="showcase-top">
+            <!-- <img src="https://i.ibb.co/r5krrdz/logo.png" alt="" /> -->
+             <h1 class="logo">VULSCANNERAI</h1>
+            <a href="#" class="btn btn-rounded">Use with custom API key</a>
+        </div>
+        <div class="showcase-content">
+            <h1>Vulnerability Detection in Code using LLMs</h1>
+            <p>Welcome to our project on securing systems by identifying vulnerabilities in code using the power of Large Language Models.</p>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Our Approach</h2>
+                    <p>We utilize state-of-the-art LLMs to analyze code and identify potential vulnerabilities. Our approach involves:</p>
+                    <ul>
+                        <li>Code Analysis: We use LLMs to analyze code and identify patterns that may indicate vulnerabilities.</li>
+                        <li>Vulnerability Identification: We use the results of the code analysis to identify potential vulnerabilities.</li>
+                        <li>Reporting: We provide detailed reports on the identified vulnerabilities, including recommendations for remediation.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            
+            <!-- <a href="#" class="btn btn-xl"
+                >Watch Free For 30 Days <i class="fas fa-chevron-right btn-icon"></i
+            ></a> -->
+        </div>
+    </header>
+    <section class="tabs">
+        <div class="container">
+            <div id="tab-1" class="tab-item tab-border">
+                <i class="fas fa-solid fa-file fa-3x"></i>
+                <p class="hide-sm">File Scanner</p>
+            </div>
+            <div id="tab-2" class="tab-item">
+                <i class="fas fa-solid fa-code fa-3x"></i>
+                <p class="hide-sm">Code Scanner</p>
+            </div>
+            <div id="tab-3" class="tab-item">
+                <i class="fas fa-solid fa-lock fa-3x"></i>
+                <p class="hide-sm">vulnerabilities </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="tab-content">
+        <div class="container">
+            <!-- Tab Content 1 -->
+            <div id="tab-1-content" class="tab-content-item show">
+                <div class="tab-1-content-inner">
+                    <div>
+                        <p class="text-lg">
+                            File Scanner 
+                        </p>
+                        <p class="text-sm">
+                            To begin scanning your code for potential vulnerabilities, please upload your file. Our system will analyze each function within your code to detect any vulnerabilities. Once the scan is complete, you will receive a detailed report indicating any vulnerabilities found, along with their associated information.
+                        </p>
+                        <a href="{% url 'file_scanner' %}" class="btn btn-lg">Upload your File</a>
+                    </div>
+                    <img src="https://i.ibb.co/J2xDJV7/tab-content-1.png" alt="" />
+                </div>
+            </div>
+
+            <!-- Tab Content 2 -->
+            <div id="tab-2-content" class="tab-content-item">
+                <div class="tab-2-content-top">
+                    <p class="text-lg">
+                        Scan your code with our own chatbot
+                    </p>
+                    <p class="text-sm" >
+                        Just Enter your code in the text and our system will analyze if the code is secure or insecure and will prompt back
+                    </p>
+                    <a href="{% url 'code_scanner' %}" class="btn btn-lg">Chat with the model?</a>
+                </div>
+                <div class="tab-2-content-bottom">
+                    
+                </div>
+            </div>
+
+            <!-- Tab Content 3 -->
+            <div id="tab-3-content" class="tab-content-item">
+                <div class="text-center">
+                    <p class="text-lg">
+                        Scan your code from multiple vulnerabilities securing your system.
+                    </p>
+                    <a href="#" class="btn btn-lg">View Full List of vulnerabilities</a>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Basic</th>
+                            <th>Standard</th>
+                            <th>Premium</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Monthly price after free month ends on 6/19/19</td>
+                            <td>$8.99</td>
+                            <td>$12.99</td>
+                            <td>$15.99</td>
+                        </tr>
+                        <tr>
+                            <td>HD Available</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Ultra HD Available</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Screens you can watch on at the same time</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>Watch on your laptop, TV, phone and tablet</td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Unlimited movies and TV shows</td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Cancel anytime</td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>First month free</td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>Questions? email ilmaanzia@gmail.com</p>
+        <!-- <div class="footer-cols">
+            <ul>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Investor Relations</a></li>
+                <li><a href="#">Ways To Watch</a></li>
+                <li><a href="#">Corporate Information</a></li>
+                <li><a href="#">Netflix Originals</a></li>
+            </ul>
+            <ul>
+                <li><a href="#">Help Center</a></li>
+                <li><a href="#">Jobs</a></li>
+                <li><a href="#">Terms Of Use</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+            <ul>
+                <li><a href="#">Account</a></li>
+                <li><a href="#">Redeem Gift Cards</a></li>
+                <li><a href="#">Privacy</a></li>
+                <li><a href="#">Speed Test</a></li>
+            </ul>
+            <ul>
+                <li><a href="#">Media Center</a></li>
+                <li><a href="#">Buy Gift Cards</a></li>
+                <li><a href="#">Cookie Preferences</a></li>
+                <li><a href="#">Legal Notices</a></li>
+            </ul>
+        </div> -->
+
+    </footer>
+</body>
+</html>
+
+
+<script>
+
+    const tabItems = document.querySelectorAll('.tab-item');
+const tabContentItems = document.querySelectorAll('.tab-content-item');
+
+// Select tab content item
+function selectItem(e) {
+	// Remove all show and border classes
+	removeBorder();
+	removeShow();
+	// Add border to current tab item
+	this.classList.add('tab-border');
+	// Grab content item from DOM
+	const tabContentItem = document.querySelector(`#${this.id}-content`);
+	// Add show class
+	tabContentItem.classList.add('show');
+}
+
+// Remove bottom borders from all tab items
+function removeBorder() {
+	tabItems.forEach(item => {
+		item.classList.remove('tab-border');
+	});
+}
+
+// Remove show class from all content items
+function removeShow() {
+	tabContentItems.forEach(item => {
+		item.classList.remove('show');
+	});
+}
+
+// Listen for tab item click
+tabItems.forEach(item => {
+	item.addEventListener('click', selectItem);
+});
+
+</script>
