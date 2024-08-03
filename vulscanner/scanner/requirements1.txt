@@ -1,0 +1,11 @@
+%%capture
+# Installs Unsloth, Xformers (Flash Attention) and all other packages!
+!pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
+!pip install --no-deps "xformers<0.0.26" trl peft accelerate bitsandbytes
+!pip install wandb
+
+
+!pip install -U "xformers<0.0.26" --index-url https://download.pytorch.org/whl/cu121
+
+
+! pip install -U langchain_community langchain-mistralai langchain langgraph

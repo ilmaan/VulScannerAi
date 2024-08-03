@@ -65,15 +65,39 @@
             document.getElementById('userResponse').value = '';
         }
 
-        function generateResponse(input) {
+        /*function generateResponse(input) {
             const responses = [
                 "Fascinating query. Our databanks suggest that " + input + " is closely related to the cosmic phenomena we've observed in the Starfield.",
                 "Ah, " + input + "! A topic of great interest. Recent discoveries in the outer rim have shed new light on this subject.",
-                "Your interest in " + input + " is well-placed. It's a crucial element in our understanding of interstellar travel.",
+               // "Your interest in " + input + " is well-placed. It's a crucial element in our understanding of interstellar travel.",
                 "The mysteries of " + input + " continue to perplex even our most advanced AI systems. Shall we delve deeper?",
                 "Our latest mission to the " + input + " sector has yielded unexpected results. Would you like to know more?"
             ];
             return responses[Math.floor(Math.random() * responses.length)];
+        }
+        */
+
+        function generateResponse(input) {
+            $.ajax({
+                url: '/get_response/',  // URL to send the request to
+                type: 'POST',
+                data: {
+                    'input': input,
+                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()  // Include CSRF token for security
+                },
+                success: function(response) {
+                    displayResponse(response);  // Function to display the response on your webpage
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + error);
+                }
+            });
+        }
+        
+        function displayResponse(response) {
+            // Code to display the response on your webpage
+            // For example, append the response to a chat window
+            $('#chat-window').append('<div class="response">' + response + '</div>');
         }
 
         function initStarfield() {

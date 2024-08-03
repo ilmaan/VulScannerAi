@@ -2,6 +2,10 @@ from django.shortcuts import render
 
 from django.http import HttpResponse
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import random
+
 
 from django.views import View
 # Create your views here.
@@ -46,4 +50,20 @@ class file_scanner(View):
 
     def get(self,request):
         
-        return render(request,'file_scanner.html')Vul
+        return render(request,'file_scanner.html')
+    
+
+@csrf_exempt  # This decorator exempts the view from CSRF verification
+def get_response(request):
+    if request.method == 'POST':
+        print("GOT HERE---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        input_text = request.POST.get('input')
+        responses = [
+            f"Fascinating query. Our databanks suggest that {input_text} is closely related to the cosmic phenomena we've observed in the Starfield.",
+            f"Ah, {input_text}! A topic of great interest. Recent discoveries in the outer rim have shed new light on this subject.",
+            f"The mysteries of {input_text} continue to perplex even our most advanced AI systems. Shall we delve deeper?",
+            f"Our latest mission to the {input_text} sector has yielded unexpected results. Would you like to know more?"
+        ]
+        response = responses[random.randint(0, len(responses) - 1)]
+        return JsonResponse({'response': response})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
