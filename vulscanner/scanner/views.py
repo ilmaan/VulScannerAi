@@ -8,6 +8,8 @@ import random
 
 
 from django.views import View
+
+from scanner.mistral import chatllm
 # Create your views here.
 
 
@@ -59,11 +61,12 @@ def get_response(request):
         print("GOT HERE---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         input_text = request.POST.get('input')
         print("INPUT TEXT",input_text)
-        responses = [
-            f"----->>>>>Fascinating query. Our databanks suggest that {input_text} is closely related to the cosmic phenomena we've observed in the Starfield.",
-            f"';';';';';';Our latest mission to the {input_text} sector has yielded unexpected results. Would you like to know more?"
-        ]
-        responses = responses[random.randint(0, len(responses) - 1)]
-        
+        responses = chatllm(input_text)
+        # responses = [
+        #     f"----->>>>>Fascinating query. Our databanks suggest that {input_text} is closely related to the cosmic phenomena we've observed in the Starfield.",
+        #     f"';';';';';';Our latest mission to the {input_text} sector has yielded unexpected results. Would you like to know more?"
+        # ]
+        # responses = responses[random.randint(0, len(responses) - 1)]
+        print("CAME FROM FUNCT\n\n",responses)
         return JsonResponse({'response': responses})
     return JsonResponse({'error': 'Invalid request'}, status=400)
