@@ -9,6 +9,8 @@
     
     <link rel="stylesheet" href="{%static 'css/code_scanner.css' %}">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
     
 </head>
 <body>
@@ -65,30 +67,75 @@
             document.getElementById('userResponse').value = '';
         }
 
-        /*function generateResponse(input) {
-            const responses = [
+
+        
+
+        function generateResponse(input) {
+            
+            
+            console.log("YAYAYAYAYAYAYA",input)
+            
+
+            /*const responses = [
                 "Fascinating query. Our databanks suggest that " + input + " is closely related to the cosmic phenomena we've observed in the Starfield.",
                 "Ah, " + input + "! A topic of great interest. Recent discoveries in the outer rim have shed new light on this subject.",
                // "Your interest in " + input + " is well-placed. It's a crucial element in our understanding of interstellar travel.",
                 "The mysteries of " + input + " continue to perplex even our most advanced AI systems. Shall we delve deeper?",
                 "Our latest mission to the " + input + " sector has yielded unexpected results. Would you like to know more?"
             ];
-            return responses[Math.floor(Math.random() * responses.length)];
-        }
-        */
-
-        function generateResponse(input) {
+            */
+            $.ajaxSetup({
+                async:false
+            });
+            
             $.ajax({
-                url: '/get_response/',  // URL to send the request to
+                url: 'get_response',  // URL to send the request to
                 type: 'POST',
                 data: {
                     'input': input,
                     'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()  // Include CSRF token for security
                 },
                 success: function(response) {
-                    displayResponse(response);  // Function to display the response on your webpage
+                    console.log('0909090909)()()()',response.response,'---------<><><><><')
+                    //displayResponse(response);  // Function to display the response on your webpage
+                    responses = response.response
+                    console.log('RESPONSES--->>>>',responses)
+                    
+
                 },
                 error: function(xhr, status, error) {
+                    console.log("xhr.responseTextxhr.responseText");
+                    console.error("Error: " + error);
+                }
+            });
+
+            
+            console.log("RESPINSESSS--->>",responses)
+
+            
+            return responses;
+        }
+        
+
+        function generateResponses(input) {
+            console.log("GET IN HEERE RHIS FUCNRTION")
+            $.ajax({
+                url: 'get_response',  // URL to send the request to
+                type: 'POST',
+                data: {
+                    'input': input,
+                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()  // Include CSRF token for security
+                },
+                success: function(response) {
+                    console.log('0909090909)()()()',response.response,'---------<><><><><')
+                    //displayResponse(response);  // Function to display the response on your webpage
+                    responses = response.response
+                    console.log('RESPONSES--->>>>',responses)
+                    return responses;
+
+                },
+                error: function(xhr, status, error) {
+                    console.log("xhr.responseTextxhr.responseText");
                     console.error("Error: " + error);
                 }
             });
@@ -97,6 +144,7 @@
         function displayResponse(response) {
             // Code to display the response on your webpage
             // For example, append the response to a chat window
+            console.log("FOR DISPLAY",response)
             $('#chat-window').append('<div class="response">' + response + '</div>');
         }
 

@@ -58,12 +58,12 @@ def get_response(request):
     if request.method == 'POST':
         print("GOT HERE---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         input_text = request.POST.get('input')
+        print("INPUT TEXT",input_text)
         responses = [
-            f"Fascinating query. Our databanks suggest that {input_text} is closely related to the cosmic phenomena we've observed in the Starfield.",
-            f"Ah, {input_text}! A topic of great interest. Recent discoveries in the outer rim have shed new light on this subject.",
-            f"The mysteries of {input_text} continue to perplex even our most advanced AI systems. Shall we delve deeper?",
-            f"Our latest mission to the {input_text} sector has yielded unexpected results. Would you like to know more?"
+            f"----->>>>>Fascinating query. Our databanks suggest that {input_text} is closely related to the cosmic phenomena we've observed in the Starfield.",
+            f"';';';';';';Our latest mission to the {input_text} sector has yielded unexpected results. Would you like to know more?"
         ]
-        response = responses[random.randint(0, len(responses) - 1)]
-        return JsonResponse({'response': response})
+        responses = responses[random.randint(0, len(responses) - 1)]
+        
+        return JsonResponse({'response': responses})
     return JsonResponse({'error': 'Invalid request'}, status=400)
