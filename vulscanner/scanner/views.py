@@ -9,7 +9,7 @@ import random
 
 from django.views import View
 
-from scanner.mistral import chatllm
+from scanner.mistral import chatllm, extract_functions_from_file, analyze_functions
 # Create your views here.
 
 
@@ -44,7 +44,26 @@ class file_scanner(View):
             # if 'code_file' in request.FILES:
             code_file = request.FILES.get('code_file')
             txt = request.POST.get('textdata')
+            
+            
             print("FILEE GOT-->>",txt,'---------------', code_file,type(code_file))
+            file_content = code_file.read().decode('utf-8')
+            fucntions = extract_functions_from_file(file_content)
+            df = analyze_functions(fucntions)
+            
+            for f in range(len(df)):
+                func_code = df.loc[f,"Function Code"]
+                # messages = [("user", func_code)]
+                # result = code_gen_chain.invoke(messages)
+                print(func_code)
+                print('\n\n------------------------NEW CODE---------------------------\n\n')
+            # print(fucntions)
+            
+            # try:
+            #     file_content = code_file.read().decode('utf-8')
+            #     print("\n\nFILE FROM DESSSSSS----->>>>", file_content)
+            # except Exception as e:
+            #     print("ERROR--->>",e)    
             # Process the file data
             # else:
             #     print("No file sent")
