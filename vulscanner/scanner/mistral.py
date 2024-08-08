@@ -14,6 +14,11 @@ from pydantic import BaseModel, Field
 
 import random
 
+from scanner.pdfreport import generate_report
+
+from scanner.pdfrep import PDFPSReporte
+
+
 
 
 def chatllm(code):
@@ -129,10 +134,12 @@ def extract_functions_from_file(file_content: str) -> List[dict]:
             "function_name": func_signature,
             "function_code": full_function
         })
+
+        # print("FUNCTION LS+IST------------------------------<><><><><><\n\n")
     return function_list
 
 # Function to analyze the functions and determine their vulnerability status
-def analyze_functions(function_list: List[dict]) -> pd.DataFrame:
+def analyze_functions(function_list: List[dict],code_file) -> pd.DataFrame:
     data = []
 
     for func in function_list:
@@ -140,13 +147,83 @@ def analyze_functions(function_list: List[dict]) -> pd.DataFrame:
         # result = code_gen_chain.invoke(messages)
 
         status = "Non-vulnerable"
+        cwe_id = []
+        # vul_dsc = '''The code is vulnerable to SQL Injection . This occurs when user input is not  CWE-53 properly sanitized  CWE-23 CWE 089 before being used in a SQL query. In this case, the 'username' variable is directly inserted into the SQL query, which allows an attacker to manipulate the query and potentially delete any user from the database'''
+
+        # pattern = r'CWE-\d{2,3}'
+        # cwe_id = re.findall(pattern, vul_dsc)
+        # print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",cwe_id)
+
         # if result and hasattr(result, "vulnerability_description") and result.vulnerability_description:
         #     status = "Vulnerable"
 
-        data.append([func['function_name'], func['function_code'], status])
+        data.append([func['function_name'], func['function_code'], status,cwe_id])
 
-    df = pd.DataFrame(data, columns=['Function Name', 'Function Code', 'Status'])
+    df = pd.DataFrame(data, columns=['Function Name', 'Function Code', 'Status','CWE IDs'])
+
+    print(len(df))
+    for f in range(len(df)):
+                func_code = df.loc[f,"Function Code"]
+                # messages = [("user", func_code)]
+                # result = code_gen_chain.invoke(messages)
+                df.loc[f,"Status"] = '''The code is vulnerable to SQL Injection . This occurs when user input is not  CWE-53 properly sanitized  CWE-23 CWE 089 before being used in a SQL query. In this case, the 'username' variable is directly inserted into the SQL query, which allows an attacker to manipulate the query and potentially delete any user from the database'''
+                pattern = r'CWE-\d{2,3}'
+                cwe_id = re.findall(pattern, str(df.loc[f,"Status"])) 
+                
+                df.loc[f,"CWE IDs"] = cwe_id
+
+                
+                print(func_code)
+                print('\n\n--------++++++++-----------NEW CODE----++++++++++++++++++++-----\n\n')
+
+    # x = generate_report(code_file,df)
+    vlist = vul_list(df)
+    print('---------------------',vlist)
+
+    vdet = vul_details(vlist)
+    print('------------------>>>>>>----',vdet)
+
+    
+
+    report = PDFPSReporte('psreereport.pdf',code_file,df,vdet)
+
+
+
+    print("REPORT--------------------",report,type(report))
+
+
+    
     return df
+
+
+def vul_list(df):
+    vul_list = set()
+    for i in range(len(df)):
+          print("TIMESSSS",i,len(df))
+          for j in df.loc[i,"CWE IDs"]:
+               vul_list.add(j)
+    # print(vul_list,'---------VUL LIST--------------------')
+    return vul_list
+
+
+
+def vul_details(vlist):
+    vul_details = {}
+    dsc = '''"Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')", allows an attacker to inject malicious SQL code into a robotic system's database, compromising its:
+Data integrity and confidentiality
+System operations and availability
+Authentication and authorization mechanisms
+This can lead to unauthorized data access, system downtime, and manipulation of the robotic system's actions or movements, posing a risk to human safety and system reliability.'''
+    for vul in vlist:
+        #   print(vul,'-------VULL___DEAISL')
+        
+          vul_details[vul] = dsc
+        #   print('+++++++++++++++++++++\n\n',vul,'---',vul_details[vul],'\n\n')
+    
+    return vul_details
+          
+     
+     
 
 
 

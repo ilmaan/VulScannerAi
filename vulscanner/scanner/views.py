@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import random
-
+from django.http import FileResponse
 
 from django.views import View
 
@@ -49,14 +49,15 @@ class file_scanner(View):
             print("FILEE GOT-->>",txt,'---------------', code_file,type(code_file))
             file_content = code_file.read().decode('utf-8')
             fucntions = extract_functions_from_file(file_content)
-            df = analyze_functions(fucntions)
+            df = analyze_functions(fucntions,str(code_file))
+            print("___________________________\n\n",df)
             
-            for f in range(len(df)):
-                func_code = df.loc[f,"Function Code"]
-                # messages = [("user", func_code)]
-                # result = code_gen_chain.invoke(messages)
-                print(func_code)
-                print('\n\n------------------------NEW CODE---------------------------\n\n')
+            # for f in range(len(df)):
+            #     func_code = df.loc[f,"Function Code"]
+            #     # messages = [("user", func_code)]
+            #     # result = code_gen_chain.invoke(messages)
+            #     print(func_code)
+            #     print('\n\n------------------------NEW CODE---------------------------\n\n')
             # print(fucntions)
             
             # try:
@@ -67,6 +68,7 @@ class file_scanner(View):
             # Process the file data
             # else:
             #     print("No file sent")
+            
             return render(request, 'file_scanner.html')   
 
     def get(self,request):
