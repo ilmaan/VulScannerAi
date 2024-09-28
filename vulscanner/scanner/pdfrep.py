@@ -159,7 +159,7 @@ class PDFPSReporte:
         Create the line items
         """
         d = []
-        textData = ["No.", "Function Name", "Original Code", "Vulnerability Status", "CWE IDS"]
+        textData = ["No.", "Function CODE", "Secure Code", "Vulnerability Status", "CWE IDS"]
                 
         fontSize = 8
         centered = ParagraphStyle(name="centered", alignment=TA_CENTER)
@@ -181,7 +181,7 @@ class PDFPSReporte:
         
 
         for row in range(len(self.df)):
-            lineData = [row+1, self.df.loc[row,"Function Name"], self.df.loc[row,"Function Code"], self.df.loc[row,"Status"], self.df.loc[row,"CWE IDs"]]
+            lineData = [row+1, self.df.loc[row,"Function Code"], self.df.loc[row,"Secure Code"], self.df.loc[row,"Status"], self.df.loc[row,"CWE IDs"]]
             #data.append(lineData)
             columnNumber = 0
             for item in lineData:
@@ -247,42 +247,42 @@ class PDFPSReporte:
                     #   ParagraphStyle(name="05", alignment=TA_CENTER)
                       ]
         n=1
-        for row in self.vdet:
-            print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n")
-            print(row,'**************************',self.vdet[row])
-            lineData = [row, self.vdet[row]]
-            n=n+1
-            #data.append(lineData)
-            columnNumber = 0
-            for item in lineData:
-                ptext = "<font size='%s'>%s</font>" % (fontSize-1, item)
-                p = Paragraph(ptext, alignStyle[columnNumber])
-                formattedLineData.append(p)
-                columnNumber = columnNumber + 1
-            data.append(formattedLineData)
-            formattedLineData = []
+        # for row in self.vdet:
+        #     print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n")
+        #     print(row,'**************************',self.vdet[row])
+        #     lineData = [row, self.vdet[row]]
+        #     n=n+1
+        #     #data.append(lineData)
+        #     columnNumber = 0
+        #     for item in lineData:
+        #         ptext = "<font size='%s'>%s</font>" % (fontSize-1, item)
+        #         p = Paragraph(ptext, alignStyle[columnNumber])
+        #         formattedLineData.append(p)
+        #         columnNumber = columnNumber + 1
+        #     data.append(formattedLineData)
+        #     formattedLineData = []
             
-        # Row for total
-        totalRow = ["Total Vulneratble Functions ", "", "2"]
-        for item in totalRow:
-            ptext = "<font size='%s'>%s</font>" % (fontSize-1, item)
-            p = Paragraph(ptext, alignStyle[1])
-            formattedLineData.append(p)
-        data.append(formattedLineData)
+        # # Row for total
+        # totalRow = ["Total Vulneratble Functions ", "", "2"]
+        # for item in totalRow:
+        #     ptext = "<font size='%s'>%s</font>" % (fontSize-1, item)
+        #     p = Paragraph(ptext, alignStyle[1])
+        #     formattedLineData.append(p)
+        # data.append(formattedLineData)
         
-        #print(data)
-        table = Table(data, colWidths=[50, 250])
-        tStyle = TableStyle([ #('GRID',(0, 0), (-1, -1), 0.5, grey),
-                ('ALIGN', (0, 0), (0, -1), 'LEFT'),
-                #('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                ("ALIGN", (1, 0), (1, -1), 'RIGHT'),
-                ('LINEABOVE', (0, 0), (-1, -1), 1, self.colorOhkaBlue1),
-                ('BACKGROUND',(0, 0), (-1, 0), self.colorOhkaGreenLineas),
-                ('BACKGROUND',(0, -1),(-1, -1), self.colorOhkaBlue1),
-                ('SPAN',(0,-1),(-2,-1))
-                ])
-        table.setStyle(tStyle)
-        self.elements.append(table)
+        # #print(data)
+        # table = Table(data, colWidths=[50, 250])
+        # tStyle = TableStyle([ #('GRID',(0, 0), (-1, -1), 0.5, grey),
+        #         ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        #         #('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        #         ("ALIGN", (1, 0), (1, -1), 'RIGHT'),
+        #         ('LINEABOVE', (0, 0), (-1, -1), 1, self.colorOhkaBlue1),
+        #         ('BACKGROUND',(0, 0), (-1, 0), self.colorOhkaGreenLineas),
+        #         ('BACKGROUND',(0, -1),(-1, -1), self.colorOhkaBlue1),
+        #         ('SPAN',(0,-1),(-2,-1))
+        #         ])
+        # table.setStyle(tStyle)
+        # self.elements.append(table)
         
         
         

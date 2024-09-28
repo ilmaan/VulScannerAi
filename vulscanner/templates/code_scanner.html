@@ -23,11 +23,15 @@
         </div>
         <div class="conversation hidden">
             <div class="chat-area">
-                <div class="chat-bubble ai-bubble">Greetings, Developer. I am your AI guide to detect for vulnerabilites in your code. Just paste in your code our model will scan the code for possible vulnerabilites and that can poses security threats to your system and will generate you a secure version of your code </div>
+                <div class="chat-bubble ai-bubble" style="text-align: left;">Greetings, Developer. I am your AI guide to detect for vulnerabilites in your code. Just paste in your code our model will scan the code for possible vulnerabilites and that can poses security threats to your system and will generate you a secure version of your code </div>
             </div>
             <div class="user-input">
-                <textarea class="textareas" cols="500" row="6" type="text" id="userResponse" placeholder="Enter your Code here..."></textarea>
-                <button id="sendResponse">Scan</button>
+                
+                    <textarea class="textareas" cols="500" style="height: 150px;" row="6" type="text" id="userResponse" placeholder="Enter your Code here...">
+                        
+                    </textarea>
+                
+                    <button id="sendResponse">Scan</button>
             </div>
         </div>
     </section>
@@ -47,25 +51,56 @@
         });
         */
 
-        function sendMessage() {
-            const userInput = document.getElementById('userResponse').value;
-            if (userInput.trim() !== '') {
-                const chatArea = document.querySelector('.chat-area');
-                const userBubble = document.createElement('div');
-                userBubble.classList.add('chat-bubble', 'user-bubble');
-                userBubble.textContent = userInput;
-                chatArea.appendChild(userBubble);
+        // function sendMessage() {
+        //     const userInput = document.getElementById('userResponse').value;
+        //     if (userInput.trim() !== '') {
+        //         const chatArea = document.querySelector('.chat-area');
+        //         const userBubble = document.createElement('div');
+        //         userBubble.classList.add('chat-bubble', 'user-bubble');
+        //         userBubble.textContent = userInput;
+        //         chatArea.appendChild(userBubble);
 
-                setTimeout(() => {
-                    const aiResponse = document.createElement('div');
-                    aiResponse.classList.add('chat-bubble', 'ai-bubble');
-                    aiResponse.textContent = generateResponse(userInput);
-                    chatArea.appendChild(aiResponse);
-                    chatArea.scrollTop = chatArea.scrollHeight;
-                }, 1000);
-            }
-            document.getElementById('userResponse').value = '';
-        }
+        //         setTimeout(() => {
+        //             const aiResponse = document.createElement('div');
+        //             aiResponse.classList.add('chat-bubble', 'ai-bubble');
+        //             aiResponse.textContent = generateResponse(userInput);
+        //             chatArea.appendChild(aiResponse);
+        //             chatArea.scrollTop = chatArea.scrollHeight;
+        //         }, 1000);
+        //     }
+        //     document.getElementById('userResponse').value = '';
+        // }
+
+        function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function sendMessage() {
+    const userInput = document.getElementById('userResponse').value;
+    if (userInput.trim() !== '') {
+        const chatArea = document.querySelector('.chat-area');
+        
+        // Create and append user bubble
+        const userBubble = document.createElement('div');
+        userBubble.classList.add('chat-bubble', 'user-bubble');
+        userBubble.innerHTML = `<pre>${escapeHtml(userInput)}</pre>`; // Preserve formatting with <pre>
+        chatArea.appendChild(userBubble);
+
+        // Get AI response and create a bubble
+        setTimeout(() => {
+            const aiResponse = document.createElement('div');
+            aiResponse.classList.add('chat-bubble', 'ai-bubble');
+            // aiResponse.innerHTML = generateResponse(userInput); // Use innerHTML to include <pre> tags
+            aiResponse.innerHTML = `<pre>${generateResponse(userInput)}</pre>`; // Use innerHTML to include <pre> tags
+            chatArea.appendChild(aiResponse);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }, 1000);
+    }
+    document.getElementById('userResponse').value = '';
+}
 
 
         
@@ -76,14 +111,7 @@
             console.log("YAYAYAYAYAYAYA",input)
             
 
-            /*const responses = [
-                "Fascinating query. Our databanks suggest that " + input + " is closely related to the cosmic phenomena we've observed in the Starfield.",
-                "Ah, " + input + "! A topic of great interest. Recent discoveries in the outer rim have shed new light on this subject.",
-               // "Your interest in " + input + " is well-placed. It's a crucial element in our understanding of interstellar travel.",
-                "The mysteries of " + input + " continue to perplex even our most advanced AI systems. Shall we delve deeper?",
-                "Our latest mission to the " + input + " sector has yielded unexpected results. Would you like to know more?"
-            ];
-            */
+            
             $.ajaxSetup({
                 async:false
             });
@@ -113,6 +141,7 @@
             console.log("RESPINSESSS--->>",responses)
 
             
+            // responses = `<pre>${responses}</pre>`;
             return responses;
         }
         

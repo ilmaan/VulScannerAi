@@ -18,18 +18,55 @@ from scanner.pdfreport import generate_report
 
 from scanner.pdfrep import PDFPSReporte
 
+from scanner.gputest import chatcomp, chatcompfile
+
 
 
 
 def chatllm(code):
     code = code
     print("FROM RHE DUNCTION", code)
-    code = [
-            f"----->>>>>Fascinating query. Our databanks suggest that {code} is closely related to the cosmic phenomena we've observed in the Starfield.",
-            f"';';';';';';Our latest mission to the {code} sector has yielded unexpected results. Would you like to know more?"
-        ]
-    code = code[random.randint(0, len(code) - 1)]
-    return code
+    
+
+    resp = chatcomp(code)
+
+    # response = resp
+
+    # # Extract CWE ID
+    # cwe_id = re.search(r'CWE-id:\s*(.*)', response)
+    # cwe_id = cwe_id.group(1) if cwe_id else None
+
+    # # Extract Reason
+    # reason = re.search(r'Reason:\s*(.*?)(?=\n\n)', response, re.DOTALL)
+    # reason = reason.group(1).strip() if reason else None
+
+    # # Extract Secure Version
+    # # secure_version = re.search(r'Secure Version:\s*\n(.*?)$', response, re.DOTALL)
+    # # secure_version = secure_version.group(1).strip() if secure_version else None
+
+    # # Extract Secure Version
+    # # secure_version = re.search(r'Secure Version:\s*\n(.*)', response, re.DOTALL)
+    # # secure_version = secure_version.group(1).strip() if secure_version else None
+    # # Find the start of the Secure Version section
+    # start_index = response.find("Secure Version:")
+
+    # if start_index != -1:
+    #     # If "Secure Version:" is found, extract everything after it
+    #     secure_version = response[start_index + len("Secure Version:"):].strip()
+    # else:
+    #     secure_version = None
+
+
+
+    # # Print the extracted information
+    # print("\n\n\nCWE ID-------------------------------------------------------------------------------:", cwe_id)
+    # print("\nReason------------------------------:", reason)
+    # print("\nSecure Version------------------------------------:")
+    # print(secure_version)
+
+
+
+    return resp
 
 # Prompt
 def prompt():
@@ -118,24 +155,41 @@ def prompt():
 
 
 
+# def extract_functions_from_file(file_content: str) -> List[dict]:
+#     # with open(file_path, 'r') as file:
+#     #     print("FILE FROM HELL--->>>>",file_path)
+#     # file_content = file.read()
+#     # print("\n\nFILE FROM DESSSSSS----->>>>",file_content)
+
+#     function_pattern = re.compile(r'(def \w+\(.*?\)):\n((?:    .*?\n)*)', re.DOTALL)
+#     functions = function_pattern.findall(file_content)
+
+#     function_list = []
+#     for func_signature, func_body in functions:
+#         full_function = f'{func_signature}:\n{func_body.strip()}'
+#         function_list.append({
+#             "function_name": func_signature,
+#             "function_code": full_function
+#         })
+
+#         print("FUNCTION LS+IST------------------------------<><><><><><\n\n")
+#     return function_list
+
+
 def extract_functions_from_file(file_content: str) -> List[dict]:
-    # with open(file_path, 'r') as file:
-    #     print("FILE FROM HELL--->>>>",file_path)
-    # file_content = file.read()
-    # print("\n\nFILE FROM DESSSSSS----->>>>",file_content)
-
-    function_pattern = re.compile(r'(def \w+\(.*?\)):\n((?:    .*?\n)*)', re.DOTALL)
+    # Improved regex pattern to capture entire functions
+    function_pattern = re.compile(r'def\s+(\w+)\s*\((.*?)\)\s*:(.*?)(?=\n(?:def|$))', re.DOTALL)
     functions = function_pattern.findall(file_content)
-
     function_list = []
-    for func_signature, func_body in functions:
-        full_function = f'{func_signature}:\n{func_body.strip()}'
+    
+    for func_name, func_args, func_body in functions:
+        full_signature = f"def {func_name}({func_args}):"
+        full_function = f"{full_signature}\n{func_body.strip()}"
         function_list.append({
-            "function_name": func_signature,
+            "function_name": full_signature,
             "function_code": full_function
         })
-
-        # print("FUNCTION LS+IST------------------------------<><><><><><\n\n")
+    print("FUNCTION LS+IST------------------------------<><><><><><\n\n",function_list)
     return function_list
 
 # Function to analyze the functions and determine their vulnerability status
@@ -164,28 +218,50 @@ def analyze_functions(function_list: List[dict],code_file) -> pd.DataFrame:
     print(len(df))
     for f in range(len(df)):
                 func_code = df.loc[f,"Function Code"]
+                print("ORIGINAL CODE ____----->>>>>\n\n\n",func_code)
+                respllm = chatcompfile(func_code)
+                status = respllm.get("Status")
+                cwe_id = respllm.get("CWE_ID")
+                reason = respllm.get("Reason")
+                secure_code = respllm.get("Secure Code")
+
+
+                print("Status>>>>>>>>>>>>>>>>>>>>-----------:", status)
+                print("CWE_ID-------------:", cwe_id)
+                print("Reason------------:", reason)
+                print("Secure Code-------------:", secure_code)
+
+                # if secure_version == None:
+                #     secure_version = respllm
+
                 # messages = [("user", func_code)]
                 # result = code_gen_chain.invoke(messages)
-                df.loc[f,"Status"] = '''The code is vulnerable to SQL Injection . This occurs when user input is not  CWE-53 properly sanitized  CWE-23 CWE 089 before being used in a SQL query. In this case, the 'username' variable is directly inserted into the SQL query, which allows an attacker to manipulate the query and potentially delete any user from the database'''
+                # df.loc[f,"Status"] = '''The code is vulnerable to SQL Injection . This occurs when user input is not  CWE-53 properly sanitized  CWE-23 CWE 089 before being used in a SQL query. In this case, the 'username' variable is directly inserted into the SQL query, which allows an attacker to manipulate the query and potentially delete any user from the database'''
+                df.loc[f,"Status"] = reason
                 pattern = r'CWE-\d{2,3}'
-                cwe_id = re.findall(pattern, str(df.loc[f,"Status"])) 
+                # cwe_id = re.findall(pattern, str(df.loc[f,"Status"])) 
                 
                 df.loc[f,"CWE IDs"] = cwe_id
 
+                df.loc[f,"Secure Code"] = secure_code
+
                 
-                print(func_code)
+
+                
                 print('\n\n--------++++++++-----------NEW CODE----++++++++++++++++++++-----\n\n')
 
     # x = generate_report(code_file,df)
-    vlist = vul_list(df)
+    # vlist = vul_list(df)
+    vlist = 3
     print('---------------------',vlist)
 
-    vdet = vul_details(vlist)
+    # vdet = vul_details(vlist)
+    vdet = "vul_details(vlist)"
     print('------------------>>>>>>----',vdet)
 
     
 
-    report = PDFPSReporte('psreereport.pdf',code_file,df,vdet)
+    report = PDFPSReporte('psreereportnewtodd.pdf',code_file,df,vdet)
 
 
 
